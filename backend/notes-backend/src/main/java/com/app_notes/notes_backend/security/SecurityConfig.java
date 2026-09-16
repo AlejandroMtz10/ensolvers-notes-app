@@ -1,4 +1,4 @@
-package com.notes.backend.security;
+package com.app_notes.notes_backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity; in production, consider enabling it with proper configuration
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // Rutas públicas de autenticación
-                .anyRequest().authenticated() // Todo lo demás requiere autenticación
+                .anyRequest().authenticated() // Routes that require authentication
             )
             .httpBasic(httpBasic -> {}); // Use HTTP Basic authentication for simplicity
 

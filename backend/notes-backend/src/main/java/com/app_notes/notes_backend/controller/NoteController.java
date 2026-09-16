@@ -1,7 +1,7 @@
-package com.notes.backend.controller;
+package com.app_notes.notes_backend.controller;
 
-import com.notes.backend.model.Note;
-import com.notes.backend.service.NoteService;
+import com.app_notes.notes_backend.model.Note;
+import com.app_notes.notes_backend.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

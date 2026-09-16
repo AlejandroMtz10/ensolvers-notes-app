@@ -1,7 +1,7 @@
-package com.notes.backend.controller;
+package com.app_notes.notes_backend.controller;
 
-import com.notes.backend.model.User;
-import com.notes.backend.repository.UserRepository;
+import com.app_notes.notes_backend.model.User;
+import com.app_notes.notes_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

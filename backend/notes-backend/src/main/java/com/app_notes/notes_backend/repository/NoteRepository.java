@@ -1,6 +1,6 @@
-package com.notes.backend.repository;
+package com.app_notes.notes_backend.repository;
 
-import com.notes.backend.model.Note;
+import com.app_notes.notes_backend.model.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.notes.backend.service;
+package com.app_notes.notes_backend.service;
 
-import com.notes.backend.model.Note;
-import com.notes.backend.repository.NoteRepository;
+import com.app_notes.notes_backend.model.Note;
+import com.app_notes.notes_backend.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

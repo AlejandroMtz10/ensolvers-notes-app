@@ -1,4 +1,4 @@
-package com.notes.backend.model;
+package com.app_notes.notes_backend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

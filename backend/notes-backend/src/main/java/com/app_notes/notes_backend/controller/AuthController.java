@@ -27,4 +27,10 @@ public class AuthController {
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully.");
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user) {
+        // If the answer is correct, return a success response
+        return ResponseEntity.ok("Login successful for user: " + user.getUsername());
+    }
 }

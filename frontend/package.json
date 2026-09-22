@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "next": "16.3.5",
+    "next-themes": "^0.4.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "reicon-react": "^1.2.5",
+    "sonner": "^2.0.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

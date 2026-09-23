@@ -33,4 +33,22 @@ public class AuthController {
         // If the answer is correct, return a success response
         return ResponseEntity.ok("Login successful for user: " + user.getUsername());
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> updatePassword(@RequestBody User userRequest) {
+        // Search user by username in the database
+        var existingUserOpt = userRepository.findByUsername(userRequest.getUsername());
+        
+        if (existingUserOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found.");
+        }
+
+        User user = existingUserOpt.get();
+        
+        // Encode the new password and update it in the database
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Password updated successfully.");
+    }
 }

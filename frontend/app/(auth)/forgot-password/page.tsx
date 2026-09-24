@@ -7,30 +7,37 @@ import { fetchApi } from "@/lib/api";
 import { toast } from "sonner";
 import { ThemeToggle } from "@/components/UI/ThemeToggle";
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle form submission and API call
-  const handleLogin = async (e: React.FormEvent) => {
+  // Handle form submission and API call for updating password
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const response = await fetchApi("/auth/login", {
+      const response = await fetchApi("/auth/forgot-password", {
         method: "POST",
         body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
-        toast.success("Login successful!");
-        router.push("/notes");
+        toast.success("Password updated successfully!");
+        router.push("/login");
       } else {
         const errorMessage = await response.text();
-        toast.error(errorMessage || "Invalid username or password");
+        toast.error(errorMessage || "Failed to update password");
       }
     } catch (error) {
       toast.error("Unable to connect to the backend server");
@@ -42,18 +49,17 @@ export default function LoginPage() {
   return (
     <main
       className="
-    min-h-screen
-    flex
-    flex-col
-    justify-between
-    p-6
-    bg-zinc-50
-    dark:bg-zinc-950
-    transition-colors
-    duration-200
-  "
+        min-h-screen
+        flex
+        flex-col
+        justify-between
+        p-6
+        bg-zinc-50
+        dark:bg-zinc-950
+        transition-colors
+        duration-200
+      "
     >
-      {" "}
       {/* Top Bar with Brand and Theme Toggle */}
       <div className="flex justify-between items-center w-full max-w-5xl mx-auto">
         <div className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-zinc-50">
@@ -64,34 +70,35 @@ export default function LoginPage() {
         </div>
         <ThemeToggle />
       </div>
-      {/* Main Login Card Container */}
+
+      {/* Main Container */}
       <div className="flex items-center justify-center my-auto py-12">
         <div
           className="
-    w-full
-    max-w-md
-    p-8
-    bg-white
-    dark:bg-zinc-900
-    border
-    border-zinc-200
-    dark:border-zinc-800
-    rounded-2xl
-    shadow-sm
-    space-y-6
-  "
+            w-full
+            max-w-md
+            p-8
+            bg-white
+            dark:bg-zinc-900
+            border
+            border-zinc-200
+            dark:border-zinc-800
+            rounded-2xl
+            shadow-sm
+            space-y-6
+          "
         >
-          {" "}
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Login
+              Reset Password
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Hi, Welcome back 👋
+              Enter your username and a new password 🔒
             </p>
           </div>
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
+
+          {/* Form */}
+          <form onSubmit={handleUpdatePassword} className="space-y-4">
             <div>
               <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Username
@@ -108,12 +115,12 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Password
+                New Password
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Enter new password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -129,20 +136,18 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="rounded border-zinc-300 dark:border-zinc-700 text-blue-600 focus:ring-blue-500"
-                />
-                Remember Me
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                Confirm New Password
               </label>
-              <a
-                href="/forgot-password"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Forgot Password?
-              </a>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="w-full px-3 py-2 text-sm bg-transparent border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+              />
             </div>
 
             <button
@@ -150,21 +155,23 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50"
             >
-              {isLoading ? "Signing in..." : "Login"}
+              {isLoading ? "Updating password..." : "Update Password"}
             </button>
           </form>
-          {/* Sign Up Redirect Link */}
+
+          {/* Back to Login Link */}
           <div className="text-center text-xs text-zinc-500 dark:text-zinc-400">
-            Not registered yet?{" "}
+            Remember your password?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="text-blue-600 dark:text-blue-400 font-medium hover:underline inline-flex items-center gap-1"
             >
-              Create an account ↗
+              Sign in ↗
             </Link>
           </div>
         </div>
       </div>
+
       <div className="text-center text-xs text-zinc-400">
         Ensolvers Full-Stack Challenge
       </div>

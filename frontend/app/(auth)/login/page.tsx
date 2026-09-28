@@ -16,21 +16,28 @@ export default function LoginPage() {
 
   // Handle form submission and API call
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  e.preventDefault();
+  setIsLoading(true);
 
-    try {
-      const response = await fetchApi("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-      });
+  try {
+    const credentials = btoa(`${username}:${password}`);
+
+    const response = await fetchApi("/notes", {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${credentials}`,
+      },
+    });
 
       if (response.ok) {
+        sessionStorage.setItem("auth", credentials);
+
         toast.success("Login successful!");
         router.push("/notes");
+      } else if (response.status === 401) {
+        toast.error("Invalid username or password");
       } else {
-        const errorMessage = await response.text();
-        toast.error(errorMessage || "Invalid username or password");
+        toast.error("Unable to login");
       }
     } catch (error) {
       toast.error("Unable to connect to the backend server");
@@ -38,6 +45,7 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <main

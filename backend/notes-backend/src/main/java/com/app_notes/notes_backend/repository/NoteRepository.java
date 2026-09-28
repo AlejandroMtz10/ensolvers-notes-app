@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
-    // Search notes by title containing a specific keyword
-    List<Note> findByArchived(boolean archived);
+
+    List<Note> findByUserUsernameAndArchived(
+            String username,
+            boolean archived
+    );
 }

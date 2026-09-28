@@ -19,14 +19,12 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    // List active notes (archived = false)
-    public List<Note> getActiveNotes() {
-        return noteRepository.findByArchived(false);
+    public List<Note> getActiveNotes(String username) {
+        return noteRepository.findByUserUsernameAndArchived(username, false);
     }
 
-    // List archived notes (archived = true)
-    public List<Note> getArchivedNotes() {
-        return noteRepository.findByArchived(true);
+    public List<Note> getArchivedNotes(String username) {
+        return noteRepository.findByUserUsernameAndArchived(username, true);
     }
 
     // Search note by ID

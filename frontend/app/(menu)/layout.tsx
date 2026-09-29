@@ -126,7 +126,7 @@ export default function MenuLayout({
             </svg>
           </button>
           <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Ensolvers Challenge - Phase 1
+            Ensolvers Challenge
           </div>
           <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-xs">
             U

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { fetchApi } from "@/lib/api";
+import { EditNoteModal } from "@/components/Notes/EditNoteModal";
 
 interface Note {
   id: number;
@@ -14,6 +15,15 @@ interface Note {
 export default function ArchivedNotesPage() {
   const [archivedNotes, setArchivedNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
+
+  const handleUpdatedNote = (updatedNote: Note) => {
+    setArchivedNotes((currentNotes) =>
+      currentNotes.map((note) =>
+        note.id === updatedNote.id ? updatedNote : note
+      )
+    );
+  };
 
   const fetchArchivedNotes = useCallback(async () => {
     try {
@@ -132,6 +142,12 @@ export default function ArchivedNotesPage() {
 
                 <div className="flex items-center gap-3">
                   <button
+                    onClick={() => setEditingNote(note)}
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
                     onClick={() => handleUnarchive(note.id)}
                     className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
                   >
@@ -150,6 +166,11 @@ export default function ArchivedNotesPage() {
           ))}
         </div>
       )}
+      <EditNoteModal
+        note={editingNote}
+        onClose={() => setEditingNote(null)}
+        onUpdated={handleUpdatedNote}
+      />
     </div>
   );
 }

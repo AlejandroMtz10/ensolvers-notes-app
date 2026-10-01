@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { fetchApi } from "@/lib/api";
 import { toast } from "sonner";
+import { EditNoteModal } from "@/components/Notes/EditNoteModal";
 
 interface Note {
   id: number;
@@ -18,9 +19,9 @@ export default function NotesPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
 
-  // 1. Declarar primero la función de carga usando useCallback
-const fetchActiveNotes = useCallback(async () => {
+  const fetchActiveNotes = useCallback(async () => {
     try {
       const response = await fetchApi("/notes", { method: "GET" });
       if (response.ok) {
@@ -38,12 +39,10 @@ const fetchActiveNotes = useCallback(async () => {
     }
   }, []);
 
-  // 2. Ejecutarla en el montaje
   useEffect(() => {
     fetchActiveNotes();
   }, [fetchActiveNotes]);
 
-  // 3. Declarar handleCreateNote después, donde fetchActiveNotes ya existe y es visible
   const handleCreateNote = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
@@ -70,6 +69,14 @@ const fetchActiveNotes = useCallback(async () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleUpdatedNote = (updatedNote: Note) => {
+    setNotes((currentNotes) =>
+      currentNotes.map((note) =>
+        note.id === updatedNote.id ? updatedNote : note
+      )
+    );
   };
 
   const handleArchive = async (id: number) => {
@@ -198,6 +205,12 @@ const fetchActiveNotes = useCallback(async () => {
                 <span className="text-zinc-400">Active</span>
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => setEditingNote(note)}
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
                     onClick={() => handleArchive(note.id)}
                     className="text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
                   >
@@ -209,6 +222,11 @@ const fetchActiveNotes = useCallback(async () => {
           ))}
         </div>
       )}
+      <EditNoteModal
+        note={editingNote}
+        onClose={() => setEditingNote(null)}
+        onUpdated={handleUpdatedNote}
+      />
     </div>
   );
 }

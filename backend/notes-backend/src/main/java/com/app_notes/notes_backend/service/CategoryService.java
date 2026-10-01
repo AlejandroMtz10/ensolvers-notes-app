@@ -1,0 +1,27 @@
+package com.app_notes.notes_backend.service;
+
+import com.app_notes.notes_backend.model.Category;
+import com.app_notes.notes_backend.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CategoryService {
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    public Category createCategory(Category category) {
+        if (categoryRepository.findByName(category.getName()).isPresent()) {
+            throw new RuntimeException("Category already exists");
+        }
+
+        return categoryRepository.save(category);
+    }
+}

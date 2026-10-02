@@ -27,8 +27,23 @@ public class NoteService {
     }
 
     // List active notes for the authenticated user
-    public List<Note> getActiveNotes(String username) {
-        return noteRepository.findByUserUsernameAndArchived(username, false);
+    public List<Note> getActiveNotes(
+            String username,
+            String category
+    ) {
+        if (category == null || category.isBlank()) {
+            return noteRepository.findByUserUsernameAndArchived(
+                    username,
+                    false
+            );
+        }
+
+        return noteRepository
+                .findByUserUsernameAndArchivedAndCategoriesNameIgnoreCase(
+                        username,
+                        false,
+                        category
+                );
     }
 
     // List archived notes for the authenticated user

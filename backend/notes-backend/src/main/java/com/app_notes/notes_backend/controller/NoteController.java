@@ -24,8 +24,14 @@ public class NoteController {
 
     // List active notes
     @GetMapping
-    public List<Note> getAllActiveNotes(Authentication authentication) {
-        return noteService.getActiveNotes(authentication.getName());
+    public List<Note> getAllActiveNotes(
+            @RequestParam(required = false) String category,
+            Authentication authentication
+    ) {
+        return noteService.getActiveNotes(
+                authentication.getName(),
+                category
+        );
     }
 
     // List archived notes

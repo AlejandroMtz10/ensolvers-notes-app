@@ -1,32 +1,71 @@
 #!/bin/bash
 set -e
 
-echo "==> 1. Start database with PostgreSQL & Docker ..."
+echo "=============================================="
+echo " Starting Notes App"
+echo "=============================================="
+
+echo ""
+echo "==> 1. Starting PostgreSQL..."
 docker-compose up -d
 
-echo "==> 2. Compiling and starting the backend (Spring Boot)..."
+echo "==> Waiting for PostgreSQL..."
+until docker-compose exec -T postgres pg_isready -U postgres -d notes_db > /dev/null 2>&1; do
+    sleep 1
+done
+
+echo "PostgreSQL is ready."
+
+echo ""
+echo "==> 2. Building backend..."
 cd backend
-# Ensure you have permissions for the maven wrapper or use mvn directly
+
+chmod +x mvnw
 ./mvnw clean package -DskipTests
+
+echo "==> Starting backend..."
 java -jar target/*.jar &
 BACKEND_PID=$!
+
 cd ..
 
-echo "==> 3. Compiling and starting the frontend (Next.js)..."
+echo ""
+echo "==> 3. Installing frontend dependencies..."
 cd frontend
+
 if [ ! -d "node_modules" ]; then
     pnpm install
 fi
+
+echo "==> Starting frontend..."
 pnpm run dev &
 FRONTEND_PID=$!
+
 cd ..
 
-echo "======================================================"
-echo "Application started successfully!"
-echo "Backend running at: http://localhost:8080"
-echo "Frontend running at: http://localhost:3000"
-echo "======================================================"
+echo ""
+echo "=============================================="
+echo " Application started successfully!"
+echo ""
+echo " Frontend: http://localhost:3000"
+echo " Backend:  http://localhost:8080"
+echo " Database: localhost:5432"
+echo "=============================================="
+echo ""
+echo "Press Ctrl+C to stop the application."
 
-# Maintain the script alive and handle clean shutdown
-trap "kill $BACKEND_PID $FRONTEND_PID; docker-compose down; exit" INT TERM
+cleanup() {
+    echo ""
+    echo "==> Stopping application..."
+
+    kill "$BACKEND_PID" 2>/dev/null || true
+    kill "$FRONTEND_PID" 2>/dev/null || true
+
+    docker-compose down
+
+    echo "Application stopped."
+}
+
+trap cleanup INT TERM
+
 wait
